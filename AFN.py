@@ -249,6 +249,9 @@ class AFN():
     def cerradura_epsilon(self, estados):
         cadena = estados.copy()
         stack = estados.copy()
+        while stack:
+            estado_actual=stack.pop()
+            
     def simulacion(self, exp):
         estados_actuales = self.cerradura_epsilon([self.e0])
         estados_finales = []
