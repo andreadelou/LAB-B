@@ -245,27 +245,39 @@ class AFN():
             
         else:
             print("Error")
-    
+
+        
     def cerradura_epsilon(self, estados):
-        cadena = estados.copy()
-        stack = estados.copy()
-        while stack:
-            estado_actual=stack.pop()
+        stack = [] + estados
+        closure = [] + estados
+
+        while len(stack) != 0:
+            t = stack.pop()
+            transiciones_epsilon = [
+                x[2] for x in self.transiciones_splited if x[0]== t and x[1]=='ε'
+                                    ]
+            for estado in transiciones_epsilon:
+                if estado not in closure:
+                    closure.append(estado)
+                    stack.append(estado)
+        
+        return closure            
             
     def simulacion(self, exp):
-        estados_actuales = self.cerradura_epsilon([self.e0])
-        estados_finales = []
+        s = self.cerradura_epsilon([self.e0])
+        f = []
         for simbolo in exp:
             nuevos_estados = []
-            for estado in estados_actuales:
+            for estado in s:
                 for transicion in self.transiciones_splited:
                     if estado == transicion[0] and simbolo == transicion[1]:
                         nuevos_estados.append(transicion[2])
             if not nuevos_estados:
                 return False
-            estados_actuales = self.cerradura_epsilon(nuevos_estados)
-        estados_finales = self.cerradura_epsilon(estados_actuales)
-        return self.ef in estados_finales
+            s = self.cerradura_epsilon(nuevos_estados)
+        f = self.cerradura_epsilon(s)
+        return self.ef in f
+    
     
     def graph_afn(self, filename='afn'):
             # Crear grafo
