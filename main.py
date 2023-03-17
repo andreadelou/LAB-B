@@ -31,8 +31,13 @@ while BANDERA == True:
             print("\nPostfix: ", postfix)
 
             #Postfix a AFN
-            afn = AFN(postfix)
+            afn = PostifixToAFN(postfix)
             afn.conversion()
+            
+            #AFN a AFD
+            conversionAFD = AFN(afn.e0, afn.ef,afn.estados, afn.simbolos, afn.transiciones_splited)
+
+            conversionAFD.construir_afd()
             
             #Simulacion
             exp = input("\nIngrese una cadena para simular en AFN:\n-> ")
@@ -41,6 +46,12 @@ while BANDERA == True:
                 print(f"\nLa cadena '{exp}' es aceptada por el AFN.")
             else:
                 print(f"\nLa cadena '{exp}' NO es aceptada por el AFN.")
+            
+             # MINIMIZACION DE AFD A PARTIR DE AFN
+            minizacionAFD = Minimizar(conversionAFD.e0_afd, conversionAFD.ef_afd, conversionAFD.afd_transiciones, conversionAFD.estados)
+
+            minizacionAFD.minimizar('afd_minimizado_1')
+        
         else:
             print("Error en expresion")
     if opcion == 2:

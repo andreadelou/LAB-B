@@ -1,0 +1,13 @@
+digraph G {
+	<Node.DFA_Node object at 0x0000023DA677D040> [shape=circle]
+	<Node.DFA_Node object at 0x0000023DA677D100> [shape=circle]
+	<Node.DFA_Node object at 0x0000023DA677D220> [shape=circle]
+	<Node.DFA_Node object at 0x0000023DA677D400> [shape=circle]
+	<Node.DFA_Node object at 0x0000023DA677D340> [shape=circle]
+	S -> A [label=a]
+	S -> B [label=b]
+	A -> B [label=b]
+	B -> C [label=a]
+	C -> C [label=a]
+	C -> D [label=c]
+}

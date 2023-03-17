@@ -1,0 +1,16 @@
+AFD a partir de un AFN -->
+Símbolos: a, b, c, ε
+Estados:  [[4, 0, 2, 3, 5, 6], [1, 5, 6], [7, 10, 8], [], [9, 8, 11, 16, 12, 14, 15, 17], [13, 17]]
+Estado inicial: { A }
+Estados de aceptación: { ['E', 'F'] }
+Transiciones: [(0, 'a', 1), (0, 'b', 2), (0, 'c', 3), (1, 'b', 2), (2, 'a', 4), (4, 'a', 4), (4, 'c', 5)]AFD a partir de un AFN -->
+Símbolos: a, b, c, ε
+Estados:  [[0], [1], []]
+Estado inicial: { A }
+Estados de aceptación: { ['B'] }
+Transiciones: [(0, 'a', 1), (0, 'b', 2)]AFD a partir de un AFN -->
+Símbolos: a, b, c, ε
+Estados:  [[4, 0, 2, 3, 5, 6], [1, 5, 6], [7, 10, 8], [], [9, 8, 11, 16, 12, 14, 15, 17], [13, 17]]
+Estado inicial: { A }
+Estados de aceptación: { ['E', 'F'] }
+Transiciones: [(0, 'a', 1), (0, 'b', 2), (0, 'c', 3), (1, 'b', 2), (2, 'a', 4), (4, 'a', 4), (4, 'c', 5)]

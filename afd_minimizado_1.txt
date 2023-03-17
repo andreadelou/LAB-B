@@ -1,0 +1,9 @@
+AFD Minimizado a partir de un AFD generado por AFN -->
+Estados:  ['0', '1', '2']
+Estado inicial: { 0 }
+Estados de aceptación: { ['2'] }
+Transiciones: [['0', 'a', '2'], ['0', 'b', '1']]AFD Minimizado a partir de un AFD generado por AFN -->
+Estados:  ['0', '1', '2', '3', '4', '5']
+Estado inicial: { 0 }
+Estados de aceptación: { ['4', '5'] }
+Transiciones: [['0', 'c', '3'], ['0', 'b', '2'], ['0', 'a', '1'], ['1', 'b', '2'], ['2', 'a', '4'], ['4', 'c', '5'], ['4', 'a', '4']]

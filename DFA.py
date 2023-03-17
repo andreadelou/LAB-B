@@ -1,5 +1,4 @@
-# References
-# Regular expresion to DFA -> https://www.geeksforgeeks.org/regular-expression-to-dfa/
+# References https://www.geeksforgeeks.org/regular-expression-to-dfa/
 
 import functools
 from Node import DFA_Node
@@ -27,7 +26,7 @@ class DFA():
         # 2. If n is a star-node and i is a position in lastpos(n), then all positions in firstpos(n) are in followpos(i).
         # 3. Now that we have seen the rules for computing firstpos and lastpos, we now proceed to calculate the values of the same for the syntax tree of the given regular expression (a|b)*abb#.
         
-        # We start by pre-processing the regular expression given by the user
+        # Se procesa la expresion 
         print(regex)
         self.build_tree(regex)
 
@@ -43,30 +42,33 @@ class DFA():
     def build_tree(self, regex):
         my_stack = []
         my_ops = []
-        for character in regex:
-            if self.is_char_symbol(character):
-                my_stack.append(character)
-            elif character == '(':
-                my_ops.append(character)
-            elif character == ')':
-                last_in = self.peek_stack(my_ops)
-                while last_in is not None and last_in != '(':
-                    my_root = self.operate(my_ops, my_stack)
-                    my_stack.append(my_root)
+        try:
+            for character in regex:
+                if self.is_char_symbol(character):
+                    my_stack.append(character)
+                elif character == '(':
+                    my_ops.append(character)
+                elif character == ')':
                     last_in = self.peek_stack(my_ops)
-                my_ops.pop()
-            else:
-                last_in = self.peek_stack(my_ops)
-                while last_in is not None and last_in not in '()' and self.preceding_operator(last_in, character):
-                    my_root = self.operate(my_ops, my_stack)
-                    my_stack.append(my_root)
+                    while last_in is not None and last_in != '(':
+                        my_root = self.operate(my_ops, my_stack)
+                        my_stack.append(my_root)
+                        last_in = self.peek_stack(my_ops)
+                    my_ops.pop()
+                else:
                     last_in = self.peek_stack(my_ops)
-                my_ops.append(character)
+                    while last_in is not None and last_in not in '()' and self.preceding_operator(last_in, character):
+                        my_root = self.operate(my_ops, my_stack)
+                        my_stack.append(my_root)
+                        last_in = self.peek_stack(my_ops)
+                    my_ops.append(character)
 
-        while self.peek_stack(my_ops) is not None:
-            my_root = self.operate(my_ops, my_stack)
-            my_stack.append(my_root)
-        self.root = my_stack.pop()
+            while self.peek_stack(my_ops) is not None:
+                my_root = self.operate(my_ops, my_stack)
+                my_stack.append(my_root)
+            self.root = my_stack.pop()
+        except:
+            print("error de sintaxis")
 
 
     def peek_stack(self, stack):
@@ -74,7 +76,8 @@ class DFA():
             return stack[-1] #Last element
         else:
             return None
-        # Implementacion de la creacion del arbol sintactico
+        
+        # Implementacion de las operaciones del arbol sintactico
     def operate(self, operators, values):
         operator = operators.pop()
         right = values.pop()
@@ -99,112 +102,121 @@ class DFA():
     # Operacion kleen
     def kleene_closure(self, leaf):
         operator = '*'
-        if isinstance(leaf, Leaf):
-            root = Leaf(operator, None, True, [leaf], True)
-            self.nodes += [root]
-            return root
+        try: 
+            if isinstance(leaf, Leaf):
+                root = Leaf(operator, None, True, [leaf], True)
+                self.nodes += [root]
+                return root
 
-        else:
-            id_left = None
-            if leaf != epsilon:
-                id_left = self.get_id()
+            else:
+                id_left = None
+                if leaf != epsilon:
+                    id_left = self.get_id()
 
-            left_leaf = Leaf(leaf, id_left, False, [], False)
-            root = Leaf(operator, None, True, [left_leaf], True)
-            self.nodes += [left_leaf, root]
+                left_leaf = Leaf(leaf, id_left, False, [], False)
+                root = Leaf(operator, None, True, [left_leaf], True)
+                self.nodes += [left_leaf, root]
 
-            return root
+                return root
+        except:
+            print("Error en operacion *")
 
     # Operacion OR
     def or_operation(self, left, right):
         operator = '|'
-        if isinstance(left, Leaf) and isinstance(right, Leaf):
-            root = Leaf(operator, None, True, [left, right], left.nullable or right.nullable)
-            self.nodes += [root]
-            return root
+        try:
+            if isinstance(left, Leaf) and isinstance(right, Leaf):
+                root = Leaf(operator, None, True, [left, right], left.nullable or right.nullable)
+                self.nodes += [root]
+                return root
 
-        elif not isinstance(left, Leaf) and not isinstance(right, Leaf):
-            id_left = None
-            id_right = None
-            if left != epsilon:
-                id_left = self.get_id()
-            if right != epsilon:
-                id_right = self.get_id()
+            elif not isinstance(left, Leaf) and not isinstance(right, Leaf):
+                id_left = None
+                id_right = None
+                if left != epsilon:
+                    id_left = self.get_id()
+                if right != epsilon:
+                    id_right = self.get_id()
 
-            left_leaf = Leaf(left, id_left, False, [], False)
-            right_leaf = Leaf(right, id_right, False, [], False)
-            root = Leaf(operator, None, True, [left_leaf, right_leaf], left_leaf.nullable or right_leaf.nullable)
+                left_leaf = Leaf(left, id_left, False, [], False)
+                right_leaf = Leaf(right, id_right, False, [], False)
+                root = Leaf(operator, None, True, [left_leaf, right_leaf], left_leaf.nullable or right_leaf.nullable)
 
-            self.nodes += [left_leaf, right_leaf, root]
+                self.nodes += [left_leaf, right_leaf, root]
 
-            return root
+                return root
 
-        elif isinstance(left, Leaf) and not isinstance(right, Leaf):
-            id_right = None
-            if right != epsilon:
-                id_right = self.get_id()
-            
-            right_leaf = Leaf(right, id_right, False, [], False)
-            root = Leaf(operator, None, True, [left, right_leaf], left.nullable or right_leaf.nullable)
+            elif isinstance(left, Leaf) and not isinstance(right, Leaf):
+                id_right = None
+                if right != epsilon:
+                    id_right = self.get_id()
+                
+                right_leaf = Leaf(right, id_right, False, [], False)
+                root = Leaf(operator, None, True, [left, right_leaf], left.nullable or right_leaf.nullable)
 
-            self.nodes += [right_leaf, root]
-            return root
+                self.nodes += [right_leaf, root]
+                return root
 
-        elif not isinstance(left, Leaf) and isinstance(right, Leaf):
-            id_left = None
-            if left != epsilon:
-                id_left = self.get_id()
-            
-            left_leaf = Leaf(left, id_left, False, [], False)
-            root = Leaf(operator, None, True, [left_leaf, right], left_leaf.nullable or right.nullable)
+            elif not isinstance(left, Leaf) and isinstance(right, Leaf):
+                id_left = None
+                if left != epsilon:
+                    id_left = self.get_id()
+                
+                left_leaf = Leaf(left, id_left, False, [], False)
+                root = Leaf(operator, None, True, [left_leaf, right], left_leaf.nullable or right.nullable)
 
-            self.nodes += [left_leaf, root]
-            return root
+                self.nodes += [left_leaf, root]
+                return root
+        except:
+            print("Error en operacion or ")
 
     # Operacion concatenacion
     def concatenation(self, left, right):
         operator = '.'
-        if isinstance(left, Leaf) and isinstance(right, Leaf):
-            root = Leaf(operator, None, True, [left, right], left.nullable and right.nullable)
-            self.nodes += [root]
-            return root
+        try:
+            if isinstance(left, Leaf) and isinstance(right, Leaf):
+                root = Leaf(operator, None, True, [left, right], left.nullable and right.nullable)
+                self.nodes += [root]
+                return root
 
-        elif not isinstance(left, Leaf) and not isinstance(right, Leaf):
-            id_left = None
-            id_right = None
-            if left != epsilon:
-                id_left = self.get_id()
-            if right != epsilon:
-                id_right = self.get_id()
+            elif not isinstance(left, Leaf) and not isinstance(right, Leaf):
+                id_left = None
+                id_right = None
+                if left != epsilon:
+                    id_left = self.get_id()
+                if right != epsilon:
+                    id_right = self.get_id()
 
-            left_leaf = Leaf(left, id_left, False, [], False)
-            right_leaf = Leaf(right, id_right, False, [], False)
-            root = Leaf(operator, None, True, [left_leaf, right_leaf], left_leaf.nullable and right_leaf.nullable)
+                left_leaf = Leaf(left, id_left, False, [], False)
+                right_leaf = Leaf(right, id_right, False, [], False)
+                root = Leaf(operator, None, True, [left_leaf, right_leaf], left_leaf.nullable and right_leaf.nullable)
 
-            self.nodes += [left_leaf, right_leaf, root]
-            return root
+                self.nodes += [left_leaf, right_leaf, root]
+                return root
 
-        elif isinstance(left, Leaf) and not isinstance(right, Leaf):
-            id_right = None
-            if right != epsilon:
-                id_right = self.get_id()
+            elif isinstance(left, Leaf) and not isinstance(right, Leaf):
+                id_right = None
+                if right != epsilon:
+                    id_right = self.get_id()
+                
+                right_leaf = Leaf(right, id_right, False, [], False)
+                root = Leaf(operator, None, True, [left, right_leaf], left.nullable and right_leaf.nullable)
+
+                self.nodes += [right_leaf, root]
+                return root
             
-            right_leaf = Leaf(right, id_right, False, [], False)
-            root = Leaf(operator, None, True, [left, right_leaf], left.nullable and right_leaf.nullable)
+            elif not isinstance(left, Leaf) and isinstance(right, Leaf):
+                id_left = None
+                if left != epsilon:
+                    id_left = self.get_id()
+                
+                left_leaf = Leaf(left, id_left, False, [], False)
+                root = Leaf(operator, None, True, [left_leaf, right], left_leaf.nullable and right.nullable)
 
-            self.nodes += [right_leaf, root]
-            return root
-        
-        elif not isinstance(left, Leaf) and isinstance(right, Leaf):
-            id_left = None
-            if left != epsilon:
-                id_left = self.get_id()
-            
-            left_leaf = Leaf(left, id_left, False, [], False)
-            root = Leaf(operator, None, True, [left_leaf, right], left_leaf.nullable and right.nullable)
-
-            self.nodes += [left_leaf, root]
-            return root
+                self.nodes += [left_leaf, root]
+                return root
+        except:
+            print("Error en concatenacion")
         
     # Implementacion de Move para la simulacion
     def simulate_move(self, Nodo, symbol):
@@ -229,43 +241,46 @@ class DFA():
 
     # Genera los nodos y transiciones para el AFD
     def create_dfa(self):
-        startNode0 = self.root.first_pos
-        startNode0_automata = DFA_Node(self.get_name(), startNode0, True)
-        self.states.append(startNode0_automata)
-        self.init_state = startNode0_automata.name
+        try:
+            startNode0 = self.root.first_pos
+            startNode0_automata = DFA_Node(self.get_name(), startNode0, True)
+            self.states.append(startNode0_automata)
+            self.init_state = startNode0_automata.name
 
-        if self.final_state in [u for u in startNode0_automata.conjunto_nodos]:
-            self.acc_states.append(startNode0_automata.name)
+            if self.final_state in [u for u in startNode0_automata.conjunto_nodos]:
+                self.acc_states.append(startNode0_automata.name)
 
-        while not self.state_is_marked():
-            T = self.state_is_unmarked()
-            
-            T.Mark()
-
-            for s in self.symbols:
-                fp = []
+            while not self.state_is_marked():
+                T = self.state_is_unmarked()
                 
-                for u in T.conjunto_nodos:
-                    if self.get_leaf(u).name == s:
-                        fp += self.follow_pos[u]
-                fp = {a for a in fp}
-                fp = [a for a in fp]
-                if len(fp) == 0:
-                    continue
+                T.Mark()
 
-                U = DFA_Node(self.get_name(), fp, True)
-
-                if U.id not in [n.id for n in self.states]:
-                    if self.final_state in [u for u in U.conjunto_nodos]:
-                        self.acc_states.append(U.name)
+                for s in self.symbols:
+                    fp = []
                     
-                    self.states.append(U)
-                    self.transitions.append((T.name, s, U.name))
-                else:
-                    self.count -= 1
-                    for estado in self.states:
-                        if U.id == estado.id:
-                            self.transitions.append((T.name, s, estado.name))
+                    for u in T.conjunto_nodos:
+                        if self.get_leaf(u).name == s:
+                            fp += self.follow_pos[u]
+                    fp = {a for a in fp}
+                    fp = [a for a in fp]
+                    if len(fp) == 0:
+                        continue
+
+                    U = DFA_Node(self.get_name(), fp, True)
+
+                    if U.id not in [n.id for n in self.states]:
+                        if self.final_state in [u for u in U.conjunto_nodos]:
+                            self.acc_states.append(U.name)
+                        
+                        self.states.append(U)
+                        self.transitions.append((T.name, s, U.name))
+                    else:
+                        self.count -= 1
+                        for estado in self.states:
+                            if U.id == estado.id:
+                                self.transitions.append((T.name, s, estado.name))
+        except:
+            print("Syntax error")
 
     def get_leaf(self, name):
         for n in self.nodes:
@@ -322,7 +337,7 @@ class DFA():
         self.follow_pos[pos] = {i for i in self.follow_pos[pos]}
         self.follow_pos[pos] = [i for i in self.follow_pos[pos]]
     
-    # Verifies if a given character belongs to the valid symbols (letters, numbers and epsilon)
+    # Verifica que esten dando una letra i numero
     def is_char_symbol(self, character):
         symbols = 'ε'+'abcdefghijklmnopqrstuvwxyz0123456789#'
         return symbols.find(character) != -1
@@ -352,7 +367,7 @@ class DFA():
         
     def draw(self):
         # Crea un objeto Digraph de graphviz
-        dot = Digraph('G', filename='afd', format='png')
+        dot = Digraph('G', filename='DFA', format='png')
         
         # Agrega los estados
         for state in self.states:

@@ -9,9 +9,12 @@ def get_alphabet(transition):
     return { *alphabet }, { *[a.replace(' ', '') for a in alphabet] }
 
 def graph_fa(states, alphabet, initial_state, accepting_states, transition_function, name):
-    fa = SimpleDFA(states, alphabet, initial_state, accepting_states, transition_function)
-    graph = fa.to_graphviz()
-    graph.render(name)
+    try:
+        fa = SimpleDFA(states, alphabet, initial_state, accepting_states, transition_function)
+        graph = fa.to_graphviz()
+        graph.render(name)
+    except:
+        pass
 
 
 # syntax tree utilities
