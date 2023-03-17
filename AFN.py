@@ -34,7 +34,6 @@ class AFN:
         return resultado
 
     def construir_afd(self):
-        print("\nConvirtiendo de AFN a AFD...")
         e0_cerradura = self.cerradura_epsilon([self.e0])
         self.afd_estados.append(e0_cerradura)
         cola = [e0_cerradura]
@@ -88,8 +87,6 @@ class AFN:
             f.write("Estados de aceptación: { " + str(estados_finales) + " }")
             f.write("\n")
             f.write("Transiciones: " + str(self.afd_transiciones))
-
-        print("\nArchivo de AFD escrito con éxito")
         
 class Minimizar:
     def __init__(self, e0, ef, transiciones, estados):
@@ -100,7 +97,6 @@ class Minimizar:
         self.grupos = []
 
     def minimizar(self, filename):
-        print("\nMinimizando AFD...")
         self.initialize_groups()
         self.split_groups()
         self.graficar(self.build_new_afd(), filename)
@@ -214,8 +210,6 @@ class Minimizar:
                 "Estados de aceptación: { " + str(self.get_new_final_states()) + " }")
             f.write("\n")
             f.write("Transiciones: " + str(self.get_new_transitions()))
-
-        print("\nArchivo de AFD Minimizado escrito con éxito")
 
     def simular_cadena(self, cadena):
         current_state = self.e0

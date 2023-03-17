@@ -40,14 +40,11 @@ while BANDERA == True:
             conversionAFD.construir_afd()
             
             #Simulacion
-            exp = input("\nIngrese una cadena para simular en AFN:\n-> ")
-            aceptada = afn.simulacion(exp)
-            if aceptada:  # devuelve True
-                print(f"\nLa cadena '{exp}' es aceptada por el AFN.")
-            else:
-                print(f"\nLa cadena '{exp}' NO es aceptada por el AFN.")
+            w = input("\nIngrese una cadena para simular en AFN:\n-> ")
+            aceptada = afn.simulacion(w)
+            print(f'\nLa cadena {w} es acpetada en la expresion {r}? -> ', aceptada)
             
-             # MINIMIZACION DE AFD A PARTIR DE AFN
+            # MINIMIZACION DE AFD A PARTIR DE AFN
             minizacionAFD = Minimizar(conversionAFD.e0_afd, conversionAFD.ef_afd, conversionAFD.afd_transiciones, conversionAFD.estados)
 
             minizacionAFD.minimizar('afd_minimizado_1')

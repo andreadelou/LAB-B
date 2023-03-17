@@ -46,4 +46,32 @@ Transiciones: (0 - a - 1), (2 - ε - 3), (4 - ε - 0), (4 - ε - 2), (3 - ε - 5
 14  NaN        15  NaN   NaN
 15  NaN        17  NaN   NaN
 16  NaN  (12, 14)  NaN   NaN
-17  NaN       NaN  NaN   NaN
+17  NaN       NaN  NaN   NaNAFN  a partir de la Expresión Regular -->
+Símbolos: a, b
+Estados:  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21
+Estado inicial: { 6 }
+Estados de aceptación: { 21 }
+Transiciones: (0 - a - 1), (2 - b - 3), (4 - ε - 0), (4 - ε - 2), (3 - ε - 5), (1 - ε - 5), (5 - ε - 4), (5 - ε - 7), (6 - ε - 4), (6 - ε - 7), (8 - a - 9), (7 - ε - 8), (10 - a - 11), (12 - b - 13), (14 - ε - 10), (14 - ε - 12), (13 - ε - 15), (11 - ε - 15), (9 - ε - 14), (16 - a - 17), (18 - b - 19), (20 - ε - 16), (20 - ε - 18), (19 - ε - 21), (17 - ε - 21), (15 - ε - 20)
+       a         ε     b
+0    1.0       NaN   NaN
+1    NaN         5   NaN
+2    NaN       NaN   3.0
+3    NaN         5   NaN
+4    NaN    (0, 2)   NaN
+5    NaN    (4, 7)   NaN
+6    NaN    (4, 7)   NaN
+7    NaN         8   NaN
+8    9.0       NaN   NaN
+9    NaN        14   NaN
+10  11.0       NaN   NaN
+11   NaN        15   NaN
+12   NaN       NaN  13.0
+13   NaN        15   NaN
+14   NaN  (10, 12)   NaN
+15   NaN        20   NaN
+16  17.0       NaN   NaN
+17   NaN        21   NaN
+18   NaN       NaN  19.0
+19   NaN        21   NaN
+20   NaN  (16, 18)   NaN
+21   NaN       NaN   NaN

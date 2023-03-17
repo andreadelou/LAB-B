@@ -193,7 +193,6 @@ class PostifixToAFN():
     def conversion(self):
         print("\nPostfix: ", self.postfix)
         self.reemplazar_interrogacion()
-        print("\nConvirtiendo de Postfix a AFN...")
         simbolos = []
         postfix = self.postfix
         for i in postfix:
@@ -398,39 +397,23 @@ class PostifixToAFN():
                 f.write("\n")
                 f.write(string_afn)
 
-            print("\nArchivo de AFN escrito con éxito")
-
-            # SI NO SE DESEA GRAFICAR POR PROBLEMAS CON LIBRERIA QUITAR LA LINEA SIGUIENTE
-            self.graficar('afn_grafico')  # imagen del AFN
+            self.graficar('afn_grafico')  
         else:
             print("\nIngrese una expresión Regex válida")
 
     def cerradura_epsilon(self, estados):
-        """
-        Aplica la cerradura epsilon a los estados dados y devuelve todos los estados alcanzables.
-        """
-        # Inicializar una lista con los estados iniciales
         resultado = estados.copy()
-        # Inicializar una pila con los estados iniciales
         pila = estados.copy()
-        # Mientras la pila no esté vacía
         while pila:
-            # Obtener el siguiente estado de la pila
             actual = pila.pop()
-            # Obtener todas las transiciones epsilon desde el estado actual
             epsilon_transiciones = [
                 t[2] for t in self.transiciones_splited if t[0] == actual and t[1] == "ε"]
-            # Para cada estado alcanzable a través de una transición epsilon
             for e in epsilon_transiciones:
-                # Si el estado no está en el resultado
                 if e not in resultado:
-                    # Agregar el estado al resultado y a la pila
                     resultado.append(e)
                     pila.append(e)
-        # Devolver todos los estados alcanzables
         return resultado
 
-    # metodo para simular una cadena en un afn
     def simulacion(self, cadena):
         estados_actuales = self.cerradura_epsilon([self.e0])
         estados_finales = []
