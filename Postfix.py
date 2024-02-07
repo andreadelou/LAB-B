@@ -190,6 +190,7 @@ class PostifixToAFN():
     def reemplazar_interrogacion(self):
         self.postfix = self.postfix.replace('?', 'ε?')
 
+    #thomson
     def conversion(self):
         print("\nPostfix: ", self.postfix)
         self.reemplazar_interrogacion()
